@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ellen | Full Stack Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
+        
+        :root { --inter: 'Inter', sans-serif; }
+        body { font-family: var(--inter); }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-thumb { background-color: #3b82f6; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+
+        /* Animated Background Shapes */
+        .animated-code-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: -1; 
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        html.dark .animated-code-bg { opacity: 0.15; }
+        html:not(.dark) .animated-code-bg { opacity: 0.05; }
+
+        .code-shape {
+            position: absolute; width: 80px; height: 80px;
+            background-color: currentColor; border-radius: 12px;
+            animation: float 12s ease-in-out infinite alternate, fade 6s ease-out infinite;
+        }
+        .code-shape:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+        .code-shape:nth-child(2) { top: 70%; left: 80%; animation-delay: 2s; }
+        .code-shape:nth-child(3) { top: 40%; left: 45%; animation-delay: 4s; }
+        .code-shape:nth-child(4) { top: 20%; left: 90%; animation-delay: 6s; }
+        .code-shape:nth-child(5) { top: 90%; left: 20%; animation-delay: 8s; }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-20px) rotate(10deg); }
+        }
+        @keyframes fade { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        /* Typing Cursor */
+        .cursor {
+            display: inline-block; width: 3px; background-color: #3b82f6;
+            animation: blink 1s infinite; margin-left: 2px;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Skills Carousel Styling */
+        .scrolling-wrapper {
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+            padding-left: 50%; 
+            padding-right: 50%;
+        }
+        .scrolling-wrapper::-webkit-scrollbar { display: none; }
+        
+        .card-slider-item {
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform: scale(0.8);
+            opacity: 0.5;
+            filter: blur(1px);
+        }
+        
+        .card-slider-item.active-card {
+            transform: scale(1.15); 
+            opacity: 1;
+            filter: blur(0px);
+            z-index: 10;
+            box-shadow: 0 10px 30px -5px rgba(59, 130, 246, 0.4);
+            border-color: #3b82f6;
+        }
+
+        /* Enhanced Glowing Hover Effects */
+        .glow-card { 
+            transition: all 0.3s ease; 
+            border: 1px solid transparent;
+        }
+        
+        html:not(.dark) .glow-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.5); 
+            border-color: #3b82f6;
+        }
+
+        html.dark .glow-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.6); 
+            border-color: #60a5fa;
+        }
+
+        /* Page Transitions */
+        .page-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .page-section.active-page {
+            display: block;
+            opacity: 1;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-500 min-h-screen flex flex-col">
+
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm transition-colors duration-500">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a onclick="navigateTo('home')" class="cursor-pointer text-2xl font-extrabold text-blue-600 dark:text-blue-400 tracking-tighter hover:scale-[1.05] transition-transform">
+                Ellen.dev
+            </a>
+
+            <div class="hidden md:flex space-x-8 items-center">
+                <button onclick="navigateTo('home')" class="nav-link text-gray-700 dark:text-gray-300 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Home</button>
+                <button onclick="navigateTo('skills')" class="nav-link text-gray-700 dark:text-gray-300 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Skills</button>
+                <button onclick="navigateTo('projects')" class="nav-link text-gray-700 dark:text-gray-300 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Projects</button>
+                <button onclick="navigateTo('contact')" class="nav-link text-gray-700 dark:text-gray-300 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Contact</button>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 text-gray-800 dark:text-yellow-300 transition-colors ring-1 ring-gray-300 dark:ring-gray-700">
+                    <i data-lucide="sun" id="sun-icon" class="w-5 h-5 hidden dark:block"></i>
+                    <i data-lucide="moon" id="moon-icon" class="w-5 h-5 dark:hidden"></i>
+                </button>
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <div id="mobile-menu" class="fixed inset-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl z-40 hidden flex flex-col items-center justify-center space-y-8 p-6 transition-transform">
+        <button id="close-menu-btn" class="absolute top-6 right-6 p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-full"><i data-lucide="x" class="w-8 h-8"></i></button>
+        <button onclick="navigateTo('home')" class="text-3xl font-bold hover:text-blue-500">Home</button>
+        <button onclick="navigateTo('skills')" class="text-3xl font-bold hover:text-blue-500">Skills</button>
+        <button onclick="navigateTo('projects')" class="text-3xl font-bold hover:text-blue-500">Projects</button>
+        <button onclick="navigateTo('contact')" class="text-3xl font-bold hover:text-blue-500">Contact</button>
+    </div>
+
+    <div class="animated-code-bg text-blue-500 dark:text-cyan-400">
+        <div class="code-shape" style="--rotation: 15deg;"></div>
+        <div class="code-shape" style="--rotation: -30deg;"></div>
+        <div class="code-shape" style="--rotation: 50deg;"></div>
+        <div class="code-shape" style="--rotation: -10deg;"></div>
+        <div class="code-shape" style="--rotation: 35deg;"></div>
+    </div>
+
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-8 pb-20 relative z-10">
+
+        <section id="home-page" class="page-section active-page min-h-[80vh] flex flex-col justify-center items-center text-center">
+            
+            <div class="mb-6 flex flex-col items-center">
+                <p class="text-3xl sm:text-4xl font-bold text-gray-700 dark:text-gray-300 mb-1 drop-shadow-md">
+                    Hi there !
+                </p>
+                
+                <h1 class="text-7xl sm:text-8xl lg:text-9xl font-black leading-tight tracking-tight text-gray-900 dark:text-white">
+                    I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300 inline-block hover:scale-105 transition-transform duration-300 cursor-default">Ellen</span>
+                </h1>
+            </div>
+
+            <div class="h-12 sm:h-16 mb-8 flex items-center justify-center">
+                <span id="typewriter-text" class="text-2xl sm:text-4xl font-mono font-semibold text-blue-700 dark:text-blue-300"></span>
+                <span class="cursor h-8 sm:h-10"></span>
+            </div>
+
+            <div class="relative max-w-3xl mx-auto p-8 rounded-2xl bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-2xl hover:shadow-blue-500/10 transition-shadow duration-500">
+                <i data-lucide="quote" class="absolute top-4 left-4 w-8 h-8 text-blue-400 opacity-30"></i>
+                <p class="text-lg sm:text-xl text-gray-700 dark:text-gray-300 leading-relaxed relative z-10 font-medium">
+                    With a cup of coffee and my laptop, I transform ordinary environments into extraordinary digital worlds. I build immersive experiences through code, crafting solutions that bridge imagination and technology. Every line of code is a brushstroke in my digital canvas. Welcome to my universe of innovation.
+                </p>
+                <div class="mt-8 flex justify-center gap-6">
+                    <button onclick="navigateTo('projects')" class="px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/50 transition-all transform hover:-translate-y-1">View Work</button>
+                    <button onclick="navigateTo('contact')" class="px-8 py-3 border-2 border-blue-600 text-blue-600 dark:text-blue-400 rounded-full font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">Contact Me</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills-page" class="page-section">
+            <h2 class="text-4xl sm:text-5xl font-bold text-center mb-4">Technical Arsenal</h2>
+            <p class="text-center text-gray-500 dark:text-gray-400 mb-12">Swipe to explore my stack</p>
+
+            <div class="mb-16 relative">
+                <h3 class="text-2xl font-bold mb-6 flex items-center justify-center"><i data-lucide="layout" class="mr-2 text-blue-500"></i> Frontend</h3>
+                <div class="scrolling-wrapper flex overflow-x-auto gap-6 py-12 px-4 snap-x snap-mandatory no-scrollbar" id="frontend-slider">
+                    </div>
+            </div>
+
+            <div class="mb-16 relative">
+                <h3 class="text-2xl font-bold mb-6 flex items-center justify-center"><i data-lucide="server" class="mr-2 text-green-500"></i> Backend</h3>
+                <div class="scrolling-wrapper flex overflow-x-auto gap-6 py-12 px-4 snap-x snap-mandatory no-scrollbar" id="backend-slider">
+                    </div>
+            </div>
+
+            <div class="max-w-5xl mx-auto">
+                <h3 class="text-2xl font-bold mb-6 flex items-center justify-center"><i data-lucide="users" class="mr-2 text-purple-500"></i> Common Skills</h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+                    <div class="glow-card p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 text-center flex flex-col items-center justify-center shadow-sm">
+                        <i data-lucide="pen-tool" class="w-10 h-10 mb-3 text-pink-500"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">UI/UX Design</span>
+                    </div>
+                    <div class="glow-card p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 text-center flex flex-col items-center justify-center shadow-sm">
+                        <i data-lucide="palette" class="w-10 h-10 mb-3 text-blue-400"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">Canva</span>
+                    </div>
+                    <div class="glow-card p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 text-center flex flex-col items-center justify-center shadow-sm">
+                        <i data-lucide="users-round" class="w-10 h-10 mb-3 text-yellow-500"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">Teamwork</span>
+                    </div>
+                    <div class="glow-card p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 text-center flex flex-col items-center justify-center shadow-sm">
+                        <i data-lucide="message-circle" class="w-10 h-10 mb-3 text-green-500"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">Communication</span>
+                    </div>
+                    <div class="glow-card p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 text-center flex flex-col items-center justify-center shadow-sm">
+                        <i data-lucide="puzzle" class="w-10 h-10 mb-3 text-red-500"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">Problem Solving</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects-page" class="page-section">
+            <h2 class="text-4xl sm:text-5xl font-bold text-center mb-4">Featured Projects</h2>
+            <p class="text-center text-gray-500 mb-12">Building solutions for real-world problems</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md">
+                    <div class="h-52 bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center">
+                        <i data-lucide="feather" class="text-white w-20 h-20 drop-shadow-lg"></i>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Phoequills</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6 flex-grow leading-relaxed">
+                            A comprehensive website for my writing brand featuring a blog, portfolio, and e-commerce section for selling digital products and merchandise.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">React</span>
+                            <span class="px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-200 rounded-full text-xs font-bold uppercase tracking-wide">Node.js</span>
+                            <span class="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-200 rounded-full text-xs font-bold uppercase tracking-wide">MongoDB</span>
+                            <span class="px-3 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-200 rounded-full text-xs font-bold uppercase tracking-wide">Stripe</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md">
+                    <div class="h-52 bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                        <i data-lucide="landmark" class="text-white w-20 h-20 drop-shadow-lg"></i>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">CIVI-Connect</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6 flex-grow leading-relaxed">
+                            A mobile application built with React Native that connects citizens with local government services, enabling efficient communication and service requests.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">React Native</span>
+                            <span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-200 rounded-full text-xs font-bold uppercase tracking-wide">Flask</span>
+                            <span class="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-200 rounded-full text-xs font-bold uppercase tracking-wide">PostgreSQL</span>
+                            <span class="px-3 py-1 bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-200 rounded-full text-xs font-bold uppercase tracking-wide">Firebase</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md">
+                    <div class="h-52 bg-gradient-to-br from-purple-600 to-indigo-700 flex items-center justify-center">
+                        <i data-lucide="graduation-cap" class="text-white w-20 h-20 drop-shadow-lg"></i>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Uni-Verse</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6 flex-grow leading-relaxed">
+                            A Cross-platform Mobile App made especially for college students to socialize with other students and record all their Academic Works in a single place.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">React Native</span>
+                            <span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-200 rounded-full text-xs font-bold uppercase tracking-wide">Flask</span>
+                            <span class="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-200 rounded-full text-xs font-bold uppercase tracking-wide">PostgreSQL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md">
+                    <div class="h-52 bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center">
+                        <i data-lucide="code-2" class="text-white w-20 h-20 drop-shadow-lg"></i>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Code Ronins</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6 flex-grow leading-relaxed">
+                            A team portfolio website showcasing our collaborative projects, skills, and team members. Built with modern web technologies and responsive design.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-3 py-1 bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-200 rounded-full text-xs font-bold uppercase tracking-wide">HTML5</span>
+                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">CSS3</span>
+                            <span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-200 rounded-full text-xs font-bold uppercase tracking-wide">JS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact-page" class="page-section max-w-2xl mx-auto text-center pt-10">
+            <div class="mb-10">
+                <div class="inline-block p-6 rounded-full bg-blue-100 dark:bg-blue-900/50 mb-8">
+                    <i data-lucide="mail-plus" class="w-16 h-16 text-blue-600 dark:text-blue-400"></i>
+                </div>
+                <h2 class="text-5xl font-bold mb-6 text-gray-900 dark:text-white">Let's Collab</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 mb-10 leading-relaxed">
+                    Work together to build worlds through code and logic. Let's transform your ideas into digital reality with innovative solutions and cutting-edge technology.
+                </p>
+                
+                <a href="mailto:elisapravin@gmail.com" 
+                   class="inline-flex items-center justify-center px-12 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xl shadow-blue-500/40 hover:shadow-blue-500/60 hover:-translate-y-1 transition-all duration-300">
+                    <i data-lucide="send" class="w-6 h-6 mr-3"></i>
+                    Start a Project
+                </a>
+            </div>
+            
+            <div class="mt-20 pt-10 border-t border-gray-200 dark:border-gray-700">
+                <p class="text-gray-500 dark:text-gray-400">Or connect via social media</p>
+                <div class="flex justify-center space-x-6 mt-6">
+                    <a href="#" class="p-4 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-full hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-gray-900 transition-all"><i data-lucide="github" class="w-6 h-6"></i></a>
+                    <a href="#" class="p-4 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-full hover:bg-blue-600 hover:text-white transition-all"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
+                    <a href="#" class="p-4 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-full hover:bg-sky-500 hover:text-white transition-all"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-8 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-500 dark:text-gray-400 mt-auto bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
+        <p>&copy; <span id="year"></span> Ellen.dev. Built with passion and code.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- THEME LOGIC ---
+        const state = {
+            theme: localStorage.getItem('theme') || 'dark', 
+            currentPage: 'home'
+        };
+
+        function applyTheme(mode) {
+            const html = document.documentElement;
+            if (mode === 'dark') {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+            
+            const sun = document.getElementById('sun-icon');
+            const moon = document.getElementById('moon-icon');
+            if(sun && moon) {
+                sun.classList.toggle('hidden', mode !== 'dark');
+                moon.classList.toggle('hidden', mode === 'dark');
+            }
+            state.theme = mode;
+            localStorage.setItem('theme', mode);
+        }
+
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const newMode = state.theme === 'dark' ? 'light' : 'dark';
+            applyTheme(newMode);
+        });
+        
+        applyTheme(state.theme);
+
+
+        // --- NAVIGATION ---
+        window.navigateTo = function(pageId) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active-page');
+                setTimeout(() => {
+                    if(!section.classList.contains('active-page')) section.style.display = 'none';
+                }, 500);
+            });
+            
+            setTimeout(() => {
+                const target = document.getElementById(pageId + '-page');
+                if(target) {
+                    target.style.display = 'block';
+                    void target.offsetWidth;
+                    target.classList.add('active-page');
+                }
+            }, 50);
+
+            document.getElementById('mobile-menu').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.remove('hidden');
+        });
+        document.getElementById('close-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.add('hidden');
+        });
+
+
+        // --- SKILLS INFINITE CAROUSEL LOGIC ---
+        const frontendSkills = [
+            { name: 'HTML', icon: 'file-code-2', color: 'text-orange-500' },
+            { name: 'CSS', icon: 'palette', color: 'text-blue-500' },
+            { name: 'JavaScript', icon: 'file-json-2', color: 'text-yellow-400' },
+            { name: 'React Native', icon: 'smartphone', color: 'text-cyan-400' },
+            { name: 'TypeScript', icon: 'file-code', color: 'text-blue-600' },
+            { name: 'Node.js', icon: 'hexagon', color: 'text-green-500' }
+        ];
+
+        const backendSkills = [
+            { name: 'Flask', icon: 'flask-conical', color: 'text-gray-500' },
+            { name: 'Django', icon: 'shield-check', color: 'text-green-700' },
+            { name: 'Redis', icon: 'database', color: 'text-red-500' },
+            { name: 'Docker', icon: 'container', color: 'text-blue-500' },
+            { name: 'Express.js', icon: 'zap', color: 'text-gray-400' },
+            { name: 'MongoDB', icon: 'leaf', color: 'text-green-500' },
+            { name: 'PostgreSQL', icon: 'database-zap', color: 'text-blue-400' }
+        ];
+
+        function createSkillCard(skill) {
+            return `
+                <div class="card-slider-item snap-center shrink-0 w-48 sm:w-56 h-48 sm:h-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl flex flex-col items-center justify-center p-6 shadow-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-750">
+                    <i data-lucide="${skill.icon}" class="w-16 h-16 mb-4 ${skill.color}"></i>
+                    <h4 class="text-xl font-bold text-gray-800 dark:text-gray-100">${skill.name}</h4>
+                </div>
+            `;
+        }
+
+        function initInfiniteCarousel(containerId, skills) {
+            const container = document.getElementById(containerId);
+            
+            // Clone array 3 times
+            const tripleSkills = [...skills, ...skills, ...skills];
+            
+            let html = '';
+            tripleSkills.forEach(s => html += createSkillCard(s));
+            container.innerHTML = html;
+
+            // Render Icons
+            lucide.createIcons({
+                root: container,
+                nameAttr: 'data-lucide'
+            });
+
+            // Calculate positions
+            const cardWidth = 224 + 24; 
+            const setWidth = skills.length * cardWidth;
+
+            // Center initially
+            container.scrollLeft = setWidth;
+
+            // Infinite Scroll Logic
+            container.addEventListener('scroll', () => {
+                if (container.scrollLeft <= 100) {
+                    container.scrollLeft = setWidth + container.scrollLeft;
+                } else if (container.scrollLeft >= (setWidth * 2) - 100) {
+                    container.scrollLeft = container.scrollLeft - setWidth;
+                }
+            });
+
+            setupVisualObserver(container);
+        }
+
+        function setupVisualObserver(container) {
+            const cards = container.querySelectorAll('.card-slider-item');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active-card');
+                    } else {
+                        entry.target.classList.remove('active-card');
+                    }
+                });
+            }, {
+                root: container,
+                threshold: 0.7, 
+                rootMargin: "0px -25% 0px -25%" 
+            });
+            cards.forEach(card => observer.observe(card));
+        }
+
+        // --- TYPEWRITER ---
+        const typeStrings = ["Full Stack Developer", "UI/UX Designer"];
+        const typeElement = document.getElementById('typewriter-text');
+        let typeIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typeSpeed = 100;
+
+        function typeLoop() {
+            const currentString = typeStrings[typeIndex];
+            if (isDeleting) {
+                typeElement.textContent = currentString.substring(0, charIndex - 1);
+                charIndex--;
+                typeSpeed = 50;
+            } else {
+                typeElement.textContent = currentString.substring(0, charIndex + 1);
+                charIndex++;
+                typeSpeed = 150;
+            }
+
+            if (!isDeleting && charIndex === currentString.length) {
+                isDeleting = true;
+                typeSpeed = 2000; 
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                typeIndex = (typeIndex + 1) % typeStrings.length;
+                typeSpeed = 500;
+            }
+            setTimeout(typeLoop, typeSpeed);
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            document.getElementById('year').textContent = new Date().getFullYear();
+            typeLoop();
+            
+            // Init Sliders
+            setTimeout(() => {
+                initInfiniteCarousel('frontend-slider', frontendSkills);
+                initInfiniteCarousel('backend-slider', backendSkills);
+            }, 100);
+        });
+    </script>
+</body>
+</html>
