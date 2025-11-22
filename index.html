@@ -6,6 +6,8 @@
     <title>Ellen | Full Stack Developer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Load Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -43,7 +45,7 @@
         ::-webkit-scrollbar-thumb { background-color: #3b82f6; border-radius: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
 
-        /* Animated Background Shapes */
+        /* Animated Background Shapes - Only for light mode */
         .animated-code-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -51,7 +53,7 @@
             pointer-events: none;
         }
         
-        html.dark .animated-code-bg { opacity: 0.15; }
+        html.dark .animated-code-bg { display: none; }
         html:not(.dark) .animated-code-bg { opacity: 0.05; }
 
         .code-shape {
@@ -68,6 +70,21 @@
         @keyframes float {
             0% { transform: translateY(0) rotate(0deg); }
             100% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* Three.js Canvas for Dark Mode */
+        #webgl-canvas {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1; 
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        html.dark #webgl-canvas {
+            display: block;
         }
 
         /* New Animations */
@@ -166,15 +183,17 @@
         .mobile-skill-card {
             display: flex;
             align-items: center;
-            padding: 12px 16px;
+            padding: 10px 14px;
             background: white;
             border-radius: 12px;
             border: 1px solid #e5e7eb;
             transition: all 0.3s ease;
+            margin-bottom: 8px;
         }
         .dark .mobile-skill-card {
-            background: #1f2937;
-            border-color: #374151;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-color: rgba(255, 255, 255, 0.1);
         }
         .mobile-skill-card:hover {
             transform: translateY(-3px);
@@ -201,7 +220,8 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         .dark .carousel-nav {
-            background: rgba(31, 41, 55, 0.8);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
         }
         .carousel-nav:hover {
             background: #3b82f6;
@@ -221,19 +241,76 @@
 
         /* Slanted Footer */
         .footer-slant {
-            /* Trapezium Shape Logic: Left Up, Right Down, NOW SLANTED MORE SHARPLY
-               1. (0% 0%)   -> Start at the top left corner (Highest point).
-               2. (100% 35%)-> Go to the right side, 35% down from the top (This is the sharper slant).
-               3. (100% 100%)-> Go to bottom right corner.
-               4. (0% 100%)  -> Go to bottom left corner.
-            */
             clip-path: polygon(0 0, 100% 35%, 100% 100%, 0 100%);
             border-top: 3px solid #1e40af; /* Dark blue border */
+        }
+
+        /* Glassmorphism styles for dark mode */
+        html.dark .glow-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark .card-slider-item {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark header {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark #mobile-menu {
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(15px);
+        }
+
+        html.dark .social-icon {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark .social-icon:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        html.dark .quote-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark .mobile-skill-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Project card header styling for dark mode */
+        html.dark .project-card-header {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Mobile skills grid spacing */
+        .mobile-skills-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
         }
     </style>
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-500 min-h-screen flex flex-col">
+
+    <!-- Three.js Canvas for Dark Mode Background -->
+    <canvas id="webgl-canvas"></canvas>
 
     <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm transition-colors duration-500">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
@@ -298,7 +375,7 @@
                 <span class="cursor h-8 sm:h-10"></span>
             </div>
 
-            <div class="relative max-w-3xl mx-auto p-8 rounded-2xl bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-2xl hover:shadow-blue-500/10 transition-shadow duration-500 animate-fade-in-up">
+            <div class="relative max-w-3xl mx-auto p-8 rounded-2xl bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-2xl hover:shadow-blue-500/10 transition-shadow duration-500 animate-fade-in-up quote-container">
                 <i data-lucide="quote" class="absolute top-4 left-4 w-8 h-8 text-blue-400 opacity-30"></i>
                 <p class="text-lg sm:text-xl text-gray-700 dark:text-gray-300 leading-relaxed relative z-10 font-medium">
                     With a cup of coffee and my laptop, I transform ordinary environments into extraordinary digital worlds. I build immersive experiences through code, crafting solutions that bridge imagination and technology. Every line of code is a brushstroke in my digital canvas. Welcome to my universe of innovation.
@@ -322,7 +399,7 @@
             <!-- Frontend Skills - Mobile View -->
             <div class="md:hidden mb-12">
                 <h3 class="text-2xl font-bold mb-6 flex items-center justify-center"><i data-lucide="layout" class="mr-2 text-blue-500"></i> Frontend</h3>
-                <div class="grid grid-cols-1 gap-4">
+                <div class="mobile-skills-grid">
                     <div class="mobile-skill-card">
                         <i data-lucide="file-code-2" class="w-6 h-6 mr-4 text-orange-500"></i>
                         <span class="font-semibold text-gray-800 dark:text-gray-100">HTML</span>
@@ -368,7 +445,7 @@
             <!-- Backend Skills - Mobile View -->
             <div class="md:hidden mb-12">
                 <h3 class="text-2xl font-bold mb-6 flex items-center justify-center"><i data-lucide="server" class="mr-2 text-green-500"></i> Backend</h3>
-                <div class="grid grid-cols-1 gap-4">
+                <div class="mobile-skills-grid">
                     <div class="mobile-skill-card">
                         <i data-lucide="flask-conical" class="w-6 h-6 mr-4 text-gray-500"></i>
                         <span class="font-semibold text-gray-800 dark:text-gray-100">Flask</span>
@@ -448,7 +525,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md">
-                    <div class="h-52 bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center">
+                    <div class="h-52 bg-gradient-to-br from-orange-400 to-pink-500 dark:project-card-header flex items-center justify-center">
                         <i data-lucide="feather" class="text-white w-20 h-20 drop-shadow-lg"></i>
                     </div>
                     <div class="p-8 flex-grow flex flex-col">
@@ -466,7 +543,7 @@
                 </div>
 
                 <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md">
-                    <div class="h-52 bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                    <div class="h-52 bg-gradient-to-br from-blue-500 to-cyan-500 dark:project-card-header flex items-center justify-center">
                         <i data-lucide="landmark" class="text-white w-20 h-20 drop-shadow-lg"></i>
                     </div>
                     <div class="p-8 flex-grow flex flex-col">
@@ -484,7 +561,7 @@
                 </div>
 
                 <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md">
-                    <div class="h-52 bg-gradient-to-br from-purple-600 to-indigo-700 flex items-center justify-center">
+                    <div class="h-52 bg-gradient-to-br from-purple-600 to-indigo-700 dark:project-card-header flex items-center justify-center">
                         <i data-lucide="graduation-cap" class="text-white w-20 h-20 drop-shadow-lg"></i>
                     </div>
                     <div class="p-8 flex-grow flex flex-col">
@@ -501,7 +578,7 @@
                 </div>
 
                 <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md">
-                    <div class="h-52 bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center">
+                    <div class="h-52 bg-gradient-to-br from-gray-700 to-gray-900 dark:project-card-header flex items-center justify-center">
                         <i data-lucide="code-2" class="text-white w-20 h-20 drop-shadow-lg"></i>
                     </div>
                     <div class="p-8 flex-grow flex flex-col">
@@ -556,13 +633,13 @@
             <div class="mt-20 pt-10 border-t border-gray-200 dark:border-gray-700">
                 <p class="text-gray-500 dark:text-gray-400">Or connect via social media</p>
                 <div class="flex justify-center space-x-6 mt-6">
-                    <a href="https://github.com/Ellen-Iconoclust/" target="_blank" class="p-4 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-full hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group">
+                    <a href="https://github.com/Ellen-Iconoclust/" target="_blank" class="social-icon p-4 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-full hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group">
                         <i data-lucide="github" class="w-6 h-6"></i>
                     </a>
-                    <a href="https://www.linkedin.com/in/elisa-pravin-s" target="_blank" class="p-4 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-full hover:bg-[#0077b5] hover:text-white dark:hover:bg-[#0077b5] dark:hover:text-white transition-all duration-300 group">
+                    <a href="https://www.linkedin.com/in/elisa-pravin-s" target="_blank" class="social-icon p-4 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-full hover:bg-[#0077b5] hover:text-white dark:hover:bg-[#0077b5] dark:hover:text-white transition-all duration-300 group">
                         <i data-lucide="linkedin" class="w-6 h-6"></i>
                     </a>
-                    <a href="https://instagram.com/pravin_s_elisa" target="_blank" class="p-4 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-full hover:bg-pink-600 hover:text-white dark:hover:bg-pink-600 dark:hover:text-white transition-all duration-300 group">
+                    <a href="https://instagram.com/pravin_s_elisa" target="_blank" class="social-icon p-4 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-full hover:bg-pink-600 hover:text-white dark:hover:bg-pink-600 dark:hover:text-white transition-all duration-300 group">
                         <i data-lucide="instagram" class="w-6 h-6"></i>
                     </a>
                 </div>
@@ -580,15 +657,164 @@
     </footer>
 
     <script type="module">
+        // --- THREE.JS PARTICLE BACKGROUND ---
+        let scene, camera, renderer;
+        let object, particles, particleAttributes;
+        let mouseX = 0, mouseY = 0;
+        let targetZ = 5;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+        const canvas = document.getElementById('webgl-canvas');
+
+        function initThreeJS() {
+            // Scene Setup
+            scene = new THREE.Scene();
+            
+            // Camera Setup
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer Setup
+            renderer = new THREE.WebGLRenderer({ 
+                canvas: canvas,
+                antialias: true,
+                alpha: true
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x000000, 1);
+
+            // 1. Central 3D Object (Torus Knot)
+            const geometry = new THREE.TorusKnotGeometry( 1, 0.3, 100, 16 );
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0x8A2BE2,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.8
+            });
+            object = new THREE.Mesh(geometry, material);
+            scene.add(object);
+
+            // 2. Interactive Particle System
+            const particleCount = 20000;
+            const particleGeometry = new THREE.BufferGeometry();
+            
+            const positions = [];
+            const sizes = [];
+
+            for (let i = 0; i < particleCount; i++) {
+                const x = (Math.random() - 0.5) * 200;
+                const y = (Math.random() - 0.5) * 200;
+                const z = (Math.random() - 0.5) * 200;
+                
+                positions.push(x, y, z);
+                sizes.push(Math.random() * 2 + 0.5);
+            }
+
+            particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+            
+            particleAttributes = particleGeometry.attributes;
+
+            const particleMaterial = new THREE.PointsMaterial({
+                color: 0x33FFFF,
+                size: 0.1,
+                sizeAttenuation: true,
+                transparent: true,
+                opacity: 0.9,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            particles = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particles);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x404040, 5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(5, 5, 5);
+            scene.add(directionalLight);
+
+            // Event Listeners
+            window.addEventListener('resize', onWindowResize, false);
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            document.addEventListener('wheel', onDocumentMouseWheel, false);
+        }
+
+        function onWindowResize() {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) * 0.005;
+            mouseY = (event.clientY - windowHalfY) * 0.005;
+        }
+
+        function onDocumentMouseWheel(event) {
+            targetZ -= event.deltaY * 0.01; 
+            targetZ = Math.max(2, Math.min(20, targetZ));
+        }
+
+        let clock = new THREE.Clock();
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            // Only animate if in dark mode
+            if (!document.documentElement.classList.contains('dark')) {
+                return;
+            }
+
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+
+            // 1. Animate the Central Object
+            object.rotation.x += 0.5 * delta;
+            object.rotation.y += 0.7 * delta;
+            object.rotation.z += 0.3 * delta;
+
+            // 2. Animate Camera based on Mouse Position and Scroll
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY - camera.position.y) * 0.05;
+            camera.position.z += (targetZ - camera.position.z) * 0.05;
+
+            camera.lookAt(scene.position);
+
+            // 3. Animate Particles (Twinkle Effect)
+            const sizesArray = particleAttributes.size.array;
+            for (let i = 0; i < sizesArray.length; i++) {
+                sizesArray[i] = (Math.sin(0.1 * i + time * 3) + 1) * 0.5 + 0.1;
+            }
+            particleAttributes.size.needsUpdate = true;
+            
+            // 4. Rotate the particle field slightly
+            particles.rotation.y = time * 0.05;
+
+            renderer.render(scene, camera);
+        }
+
         // --- THEME LOGIC ---
         const state = {
-            theme: localStorage.getItem('theme') || 'light'
+            theme: localStorage.getItem('theme') || 'light' // Default to light mode
         };
 
         function applyTheme(mode) {
             const html = document.documentElement;
             if (mode === 'dark') {
                 html.classList.add('dark');
+                // Initialize Three.js if not already initialized
+                if (!scene) {
+                    initThreeJS();
+                    animateThreeJS();
+                }
             } else {
                 html.classList.remove('dark');
             }
@@ -608,6 +834,7 @@
             applyTheme(newMode);
         });
         
+        // Apply the theme on load - default is light mode
         applyTheme(state.theme);
 
         // --- MOBILE MENU TOGGLE ---
@@ -619,7 +846,6 @@
         function toggleMenu(show) {
             if(show) {
                 mobileMenu.classList.remove('hidden');
-                // Tiny delay to allow display:block to apply before opacity
                 setTimeout(() => {
                     mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
                 }, 10);
@@ -634,17 +860,14 @@
         mobileMenuBtn.addEventListener('click', () => toggleMenu(true));
         closeMenuBtn.addEventListener('click', () => toggleMenu(false));
         
-        // Close menu when a link is clicked
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => toggleMenu(false));
         });
 
         // --- RESUME DOWNLOAD FUNCTIONALITY ---
         document.getElementById('download-resume').addEventListener('click', function() {
-            // Replace this URL with the actual path to your PDF resume
             const resumeUrl = 'Ellen_Resume.pdf';
             
-            // Create a temporary anchor element to trigger download
             const link = document.createElement('a');
             link.href = resumeUrl;
             link.download = 'Ellen_FullStack_Developer_Resume.pdf';
@@ -652,7 +875,6 @@
             link.click();
             document.body.removeChild(link);
             
-            // Optional: Add a small notification
             const button = this;
             const originalText = button.innerHTML;
             button.innerHTML = '<i data-lucide="check" class="w-6 h-6 mr-3"></i>Downloaded!';
@@ -700,7 +922,6 @@
             const prevBtn = parent.querySelector('.carousel-nav.prev');
             const nextBtn = parent.querySelector('.carousel-nav.next');
             
-            // Clone array 3 times for infinite loop
             const tripleSkills = [...skills, ...skills, ...skills];
             
             let html = '';
@@ -712,27 +933,20 @@
                 nameAttr: 'data-lucide'
             });
 
-            // Calculate Item Width (w-56 = 14rem = 224px + gap-6 = 24px) -> 248px
             const cardWidth = 224 + 24; 
             const setWidth = skills.length * cardWidth;
 
-            // Start at the middle set (Index 1)
-            // Since padding is 50%, this puts the first item of the middle set in the center.
             container.scrollLeft = setWidth;
 
-            // Add highlight immediately to the center card
-            // Center card of middle set is at index: skills.length
             const allCards = container.querySelectorAll('.card-slider-item');
             if(allCards[skills.length]) {
                 allCards[skills.length].classList.add('active-card');
             }
 
-            // Infinite Scroll Handler - FIXED
             let isScrolling = false;
             container.addEventListener('scroll', () => {
                 if (isScrolling) return;
                 
-                // Jump logic - FIXED
                 if (container.scrollLeft <= 100) {
                     isScrolling = true;
                     container.scrollLeft = setWidth + container.scrollLeft;
@@ -744,7 +958,6 @@
                 }
             });
 
-            // Navigation button handlers
             prevBtn.addEventListener('click', () => {
                 container.scrollBy({ left: -cardWidth, behavior: 'smooth' });
             });
@@ -753,7 +966,6 @@
                 container.scrollBy({ left: cardWidth, behavior: 'smooth' });
             });
 
-            // Auto-scroll for desktop
             let autoScrollInterval;
             function startAutoScroll() {
                 autoScrollInterval = setInterval(() => {
@@ -765,15 +977,12 @@
                 clearInterval(autoScrollInterval);
             }
             
-            // Start auto-scroll on desktop
             if (window.innerWidth >= 768) {
                 startAutoScroll();
                 
-                // Pause auto-scroll on hover
                 container.addEventListener('mouseenter', stopAutoScroll);
                 container.addEventListener('mouseleave', startAutoScroll);
                 
-                // Pause auto-scroll when using navigation buttons
                 prevBtn.addEventListener('mouseenter', stopAutoScroll);
                 nextBtn.addEventListener('mouseenter', stopAutoScroll);
                 prevBtn.addEventListener('mouseleave', startAutoScroll);
@@ -795,8 +1004,8 @@
                 });
             }, {
                 root: container,
-                threshold: 0.6, // Increased threshold for better centering
-                rootMargin: "0px -40% 0px -40%" // Tighter margin for better centering
+                threshold: 0.6,
+                rootMargin: "0px -40% 0px -40%"
             });
             cards.forEach(card => observer.observe(card));
         }
@@ -861,7 +1070,6 @@
             typeLoop();
             
             setTimeout(() => {
-                // Only initialize carousels on desktop
                 if (window.innerWidth >= 768) {
                     initInfiniteCarousel('frontend-slider', frontendSkills);
                     initInfiniteCarousel('backend-slider', backendSkills);
