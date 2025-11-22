@@ -17,6 +17,14 @@
                     },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out',
+                        'fade-in-down': 'fadeInDown 0.8s ease-out',
+                        'fade-in-left': 'fadeInLeft 0.8s ease-out',
+                        'fade-in-right': 'fadeInRight 0.8s ease-out',
+                        'pulse-slow': 'pulse 3s infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'wiggle': 'wiggle 1s ease-in-out infinite',
+                        'slide-in-right': 'slideInRight 0.5s ease-out',
                     }
                 }
             }
@@ -60,6 +68,37 @@
         @keyframes float {
             0% { transform: translateY(0) rotate(0deg); }
             100% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* New Animations */
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInLeft {
+            0% { opacity: 0; transform: translateX(-30px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInRight {
+            0% { opacity: 0; transform: translateX(30px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        @keyframes slideInRight {
+            0% { opacity: 0; transform: translateX(30px); }
+            100% { opacity: 1; transform: translateX(0); }
         }
 
         /* Typing Cursor */
@@ -179,6 +218,18 @@
                 display: none;
             }
         }
+
+        /* Slanted Footer */
+        .footer-slant {
+            /* Trapezium Shape Logic: Left Up, Right Down, NOW SLANTED MORE SHARPLY
+               1. (0% 0%)   -> Start at the top left corner (Highest point).
+               2. (100% 35%)-> Go to the right side, 35% down from the top (This is the sharper slant).
+               3. (100% 100%)-> Go to bottom right corner.
+               4. (0% 100%)  -> Go to bottom left corner.
+            */
+            clip-path: polygon(0 0, 100% 35%, 100% 100%, 0 100%);
+            border-top: 3px solid #1e40af; /* Dark blue border */
+        }
     </style>
 </head>
 
@@ -194,6 +245,7 @@
                 <a href="#home" class="nav-link text-gray-700 dark:text-gray-300 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Home</a>
                 <a href="#skills" class="nav-link text-gray-700 dark:text-gray-300 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Skills</a>
                 <a href="#projects" class="nav-link text-gray-700 dark:text-gray-300 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Projects</a>
+                <a href="#resume" class="nav-link text-gray-700 dark:text-gray-300 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Resume</a>
                 <a href="#contact" class="nav-link text-gray-700 dark:text-gray-300 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Contact</a>
             </div>
 
@@ -216,6 +268,7 @@
         <a href="#home" class="mobile-link text-3xl font-bold hover:text-blue-500">Home</a>
         <a href="#skills" class="mobile-link text-3xl font-bold hover:text-blue-500">Skills</a>
         <a href="#projects" class="mobile-link text-3xl font-bold hover:text-blue-500">Projects</a>
+        <a href="#resume" class="mobile-link text-3xl font-bold hover:text-blue-500">Resume</a>
         <a href="#contact" class="mobile-link text-3xl font-bold hover:text-blue-500">Contact</a>
     </div>
 
@@ -232,30 +285,30 @@
         <section id="home" class="reveal-section min-h-[85vh] flex flex-col justify-center items-center text-center scroll-mt-28">
             
             <div class="mb-6 flex flex-col items-center">
-                <p class="text-3xl sm:text-4xl font-bold text-gray-700 dark:text-gray-300 mb-1 drop-shadow-md">
+                <p class="text-3xl sm:text-4xl font-bold text-gray-700 dark:text-gray-300 mb-1 drop-shadow-md animate-fade-in-down">
                     Hi there !
                 </p>
                 <h1 class="text-7xl sm:text-8xl lg:text-9xl font-black leading-tight tracking-tight text-gray-900 dark:text-white">
-                    I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300 inline-block hover:scale-105 transition-transform duration-300 cursor-default">Ellen</span>
+                    <span class="animate-fade-in-left inline-block">I'm</span> <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300 inline-block hover:scale-105 transition-transform duration-300 cursor-default animate-fade-in-right">Ellen</span>
                 </h1>
             </div>
 
-            <div class="h-12 sm:h-16 mb-8 flex items-center justify-center">
+            <div class="h-12 sm:h-16 mb-8 flex items-center justify-center animate-fade-in-up">
                 <span id="typewriter-text" class="text-2xl sm:text-4xl font-mono font-semibold text-blue-700 dark:text-blue-300"></span>
                 <span class="cursor h-8 sm:h-10"></span>
             </div>
 
-            <div class="relative max-w-3xl mx-auto p-8 rounded-2xl bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-2xl hover:shadow-blue-500/10 transition-shadow duration-500">
+            <div class="relative max-w-3xl mx-auto p-8 rounded-2xl bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-2xl hover:shadow-blue-500/10 transition-shadow duration-500 animate-fade-in-up">
                 <i data-lucide="quote" class="absolute top-4 left-4 w-8 h-8 text-blue-400 opacity-30"></i>
                 <p class="text-lg sm:text-xl text-gray-700 dark:text-gray-300 leading-relaxed relative z-10 font-medium">
                     With a cup of coffee and my laptop, I transform ordinary environments into extraordinary digital worlds. I build immersive experiences through code, crafting solutions that bridge imagination and technology. Every line of code is a brushstroke in my digital canvas. Welcome to my universe of innovation.
                 </p>
                 
                 <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 w-full">
-                    <a href="#projects" class="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white text-lg rounded-full font-semibold hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/50 transition-all transform hover:-translate-y-1 text-center">
+                    <a href="#projects" class="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white text-lg rounded-full font-semibold hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/50 transition-all transform hover:-translate-y-1 text-center animate-fade-in-left">
                         View Work
                     </a>
-                    <a href="#contact" class="w-full sm:w-auto px-8 py-4 border-2 border-blue-600 text-blue-600 dark:text-blue-400 text-lg rounded-full font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all text-center">
+                    <a href="#contact" class="w-full sm:w-auto px-8 py-4 border-2 border-blue-600 text-blue-600 dark:text-blue-400 text-lg rounded-full font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all text-center animate-fade-in-right">
                         Contact Me
                     </a>
                 </div>
@@ -466,6 +519,23 @@
             </div>
         </section>
 
+        <section id="resume" class="reveal-section py-20 scroll-mt-20">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="inline-block p-6 rounded-full bg-blue-100 dark:bg-blue-900/50 mb-8">
+                    <i data-lucide="file-text" class="w-16 h-16 text-blue-600 dark:text-blue-400"></i>
+                </div>
+                <h2 class="text-5xl font-bold mb-6 text-gray-900 dark:text-white">My Resume</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 mb-10 leading-relaxed max-w-2xl mx-auto">
+                    Want to know more about my professional journey? Download my resume to explore my experience, education, and achievements in detail.
+                </p>
+                
+                <button id="download-resume" class="inline-flex items-center justify-center px-12 py-5 text-xl font-bold rounded-full border-2 border-blue-600 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
+                    <i data-lucide="download" class="w-6 h-6 mr-3"></i>
+                    Download Resume
+                </button>
+            </div>
+        </section>
+
         <section id="contact" class="reveal-section max-w-2xl mx-auto text-center py-20 scroll-mt-20">
             <div class="mb-10">
                 <div class="inline-block p-6 rounded-full bg-blue-100 dark:bg-blue-900/50 mb-8">
@@ -477,7 +547,7 @@
                 </p>
                 
                 <a href="mailto:elisapravin@gmail.com" 
-                   class="inline-flex items-center justify-center px-12 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xl shadow-blue-500/40 hover:shadow-blue-500/60 hover:-translate-y-1 transition-all duration-300">
+                   class="inline-flex items-center justify-center px-12 py-5 text-xl font-bold rounded-full bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/50 transition-all transform hover:-translate-y-1">
                     <i data-lucide="send" class="w-6 h-6 mr-3"></i>
                     Start a Project
                 </a>
@@ -501,14 +571,18 @@
 
     </main>
 
-    <footer class="py-8 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-500 dark:text-gray-400 mt-auto bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
-        <p>&copy; <span id="year"></span> Ellen.dev. Built with passion and code.</p>
+    <!-- Footer with Trapezium Slant (Slanting Down Right) -->
+    <footer class="footer-slant bg-blue-600 text-white relative overflow-hidden pt-8 pb-4">
+        <div class="footer-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-base font-medium">&copy; 2025 Ellen.dev</p>
+            <p class="text-blue-200 text-xs mt-1">Built with passion and code.</p>
+        </div>
     </footer>
 
     <script type="module">
         // --- THEME LOGIC ---
         const state = {
-            theme: localStorage.getItem('theme') || 'dark'
+            theme: localStorage.getItem('theme') || 'light'
         };
 
         function applyTheme(mode) {
@@ -565,6 +639,31 @@
             link.addEventListener('click', () => toggleMenu(false));
         });
 
+        // --- RESUME DOWNLOAD FUNCTIONALITY ---
+        document.getElementById('download-resume').addEventListener('click', function() {
+            // Replace this URL with the actual path to your PDF resume
+            const resumeUrl = 'Ellen_Resume.pdf';
+            
+            // Create a temporary anchor element to trigger download
+            const link = document.createElement('a');
+            link.href = resumeUrl;
+            link.download = 'Ellen_FullStack_Developer_Resume.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Optional: Add a small notification
+            const button = this;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i data-lucide="check" class="w-6 h-6 mr-3"></i>Downloaded!';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                lucide.createIcons();
+            }, 2000);
+        });
 
         // --- SKILLS INFINITE CAROUSEL LOGIC - FIXED ---
         const frontendSkills = [
@@ -719,7 +818,14 @@
         }
 
         // --- TYPEWRITER ---
-        const typeStrings = ["Full Stack Developer", "UI/UX Designer"];
+        const typeStrings = [
+            "Full Stack Developer", 
+            "UI/UX Designer", 
+            "Problem Solver", 
+            "Creative Thinker",
+            "Tech Enthusiast",
+            "Code Artist"
+        ];
         const typeElement = document.getElementById('typewriter-text');
         let typeIndex = 0;
         let charIndex = 0;
@@ -740,7 +846,7 @@
 
             if (!isDeleting && charIndex === currentString.length) {
                 isDeleting = true;
-                typeSpeed = 2000; 
+                typeSpeed = 1500; 
             } else if (isDeleting && charIndex === 0) {
                 isDeleting = false;
                 typeIndex = (typeIndex + 1) % typeStrings.length;
@@ -752,7 +858,6 @@
         // --- INIT ---
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
-            document.getElementById('year').textContent = new Date().getFullYear();
             typeLoop();
             
             setTimeout(() => {
