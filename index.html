@@ -69,7 +69,7 @@
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* Skills Carousel Styling - FIXED */
+        /* Skills Carousel Styling - UPDATED */
         .scrolling-wrapper {
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none; 
@@ -121,6 +121,63 @@
         .reveal-section.is-visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* Mobile Skills Cards */
+        .mobile-skill-card {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        .dark .mobile-skill-card {
+            background: #1f2937;
+            border-color: #374151;
+        }
+        .mobile-skill-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+        }
+
+        /* Carousel Navigation */
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .dark .carousel-nav {
+            background: rgba(31, 41, 55, 0.8);
+        }
+        .carousel-nav:hover {
+            background: #3b82f6;
+            color: white;
+        }
+        .carousel-nav.prev {
+            left: 10px;
+        }
+        .carousel-nav.next {
+            right: 10px;
+        }
+        @media (max-width: 768px) {
+            .carousel-nav {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -209,16 +266,100 @@
             <h2 class="text-4xl sm:text-5xl font-bold text-center mb-4">Technical Arsenal</h2>
             <p class="text-center text-gray-500 dark:text-gray-400 mb-12">Swipe to explore my stack</p>
 
-            <div class="mb-16 relative">
+            <!-- Frontend Skills - Mobile View -->
+            <div class="md:hidden mb-12">
                 <h3 class="text-2xl font-bold mb-6 flex items-center justify-center"><i data-lucide="layout" class="mr-2 text-blue-500"></i> Frontend</h3>
-                <div class="scrolling-wrapper flex overflow-x-auto gap-6 py-12 px-4 snap-x snap-mandatory no-scrollbar" id="frontend-slider">
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="mobile-skill-card">
+                        <i data-lucide="file-code-2" class="w-6 h-6 mr-4 text-orange-500"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">HTML</span>
                     </div>
+                    <div class="mobile-skill-card">
+                        <i data-lucide="palette" class="w-6 h-6 mr-4 text-blue-500"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">CSS</span>
+                    </div>
+                    <div class="mobile-skill-card">
+                        <i data-lucide="file-json-2" class="w-6 h-6 mr-4 text-yellow-400"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">JavaScript</span>
+                    </div>
+                    <div class="mobile-skill-card">
+                        <i data-lucide="smartphone" class="w-6 h-6 mr-4 text-cyan-400"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">React Native</span>
+                    </div>
+                    <div class="mobile-skill-card">
+                        <i data-lucide="file-code" class="w-6 h-6 mr-4 text-blue-600"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">TypeScript</span>
+                    </div>
+                    <div class="mobile-skill-card">
+                        <i data-lucide="hexagon" class="w-6 h-6 mr-4 text-green-500"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">Node.js</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-16 relative">
-                <h3 class="text-2xl font-bold mb-6 flex items-center justify-center"><i data-lucide="server" class="mr-2 text-green-500"></i> Backend</h3>
-                <div class="scrolling-wrapper flex overflow-x-auto gap-6 py-12 px-4 snap-x snap-mandatory no-scrollbar" id="backend-slider">
+            <!-- Frontend Skills - Desktop Carousel -->
+            <div class="hidden md:block mb-16 relative">
+                <h3 class="text-2xl font-bold mb-6 flex items-center justify-center"><i data-lucide="layout" class="mr-2 text-blue-500"></i> Frontend</h3>
+                <div class="relative">
+                    <button class="carousel-nav prev">
+                        <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                    </button>
+                    <div class="scrolling-wrapper flex overflow-x-auto gap-6 py-12 px-4 snap-x snap-mandatory no-scrollbar" id="frontend-slider">
                     </div>
+                    <button class="carousel-nav next">
+                        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Backend Skills - Mobile View -->
+            <div class="md:hidden mb-12">
+                <h3 class="text-2xl font-bold mb-6 flex items-center justify-center"><i data-lucide="server" class="mr-2 text-green-500"></i> Backend</h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="mobile-skill-card">
+                        <i data-lucide="flask-conical" class="w-6 h-6 mr-4 text-gray-500"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">Flask</span>
+                    </div>
+                    <div class="mobile-skill-card">
+                        <i data-lucide="shield-check" class="w-6 h-6 mr-4 text-green-700"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">Django</span>
+                    </div>
+                    <div class="mobile-skill-card">
+                        <i data-lucide="database" class="w-6 h-6 mr-4 text-red-500"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">Redis</span>
+                    </div>
+                    <div class="mobile-skill-card">
+                        <i data-lucide="container" class="w-6 h-6 mr-4 text-blue-500"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">Docker</span>
+                    </div>
+                    <div class="mobile-skill-card">
+                        <i data-lucide="zap" class="w-6 h-6 mr-4 text-gray-400"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">Express.js</span>
+                    </div>
+                    <div class="mobile-skill-card">
+                        <i data-lucide="leaf" class="w-6 h-6 mr-4 text-green-500"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">MongoDB</span>
+                    </div>
+                    <div class="mobile-skill-card">
+                        <i data-lucide="database-zap" class="w-6 h-6 mr-4 text-blue-400"></i>
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">PostgreSQL</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backend Skills - Desktop Carousel -->
+            <div class="hidden md:block mb-16 relative">
+                <h3 class="text-2xl font-bold mb-6 flex items-center justify-center"><i data-lucide="server" class="mr-2 text-green-500"></i> Backend</h3>
+                <div class="relative">
+                    <button class="carousel-nav prev">
+                        <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                    </button>
+                    <div class="scrolling-wrapper flex overflow-x-auto gap-6 py-12 px-4 snap-x snap-mandatory no-scrollbar" id="backend-slider">
+                    </div>
+                    <button class="carousel-nav next">
+                        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="max-w-5xl mx-auto">
@@ -318,7 +459,7 @@
                         <div class="flex flex-wrap gap-2 mt-auto">
                             <span class="px-3 py-1 bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-200 rounded-full text-xs font-bold uppercase tracking-wide">HTML5</span>
                             <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">CSS3</span>
-                            <span class="px-3py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-200 rounded-full text-xs font-bold uppercase tracking-wide">JS</span>
+                            <span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-200 rounded-full text-xs font-bold uppercase tracking-wide">JS</span>
                         </div>
                     </div>
                 </div>
@@ -456,6 +597,9 @@
 
         function initInfiniteCarousel(containerId, skills) {
             const container = document.getElementById(containerId);
+            const parent = container.parentElement;
+            const prevBtn = parent.querySelector('.carousel-nav.prev');
+            const nextBtn = parent.querySelector('.carousel-nav.next');
             
             // Clone array 3 times for infinite loop
             const tripleSkills = [...skills, ...skills, ...skills];
@@ -500,6 +644,42 @@
                     setTimeout(() => { isScrolling = false; }, 50);
                 }
             });
+
+            // Navigation button handlers
+            prevBtn.addEventListener('click', () => {
+                container.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                container.scrollBy({ left: cardWidth, behavior: 'smooth' });
+            });
+
+            // Auto-scroll for desktop
+            let autoScrollInterval;
+            function startAutoScroll() {
+                autoScrollInterval = setInterval(() => {
+                    container.scrollBy({ left: cardWidth, behavior: 'smooth' });
+                }, 3000);
+            }
+            
+            function stopAutoScroll() {
+                clearInterval(autoScrollInterval);
+            }
+            
+            // Start auto-scroll on desktop
+            if (window.innerWidth >= 768) {
+                startAutoScroll();
+                
+                // Pause auto-scroll on hover
+                container.addEventListener('mouseenter', stopAutoScroll);
+                container.addEventListener('mouseleave', startAutoScroll);
+                
+                // Pause auto-scroll when using navigation buttons
+                prevBtn.addEventListener('mouseenter', stopAutoScroll);
+                nextBtn.addEventListener('mouseenter', stopAutoScroll);
+                prevBtn.addEventListener('mouseleave', startAutoScroll);
+                nextBtn.addEventListener('mouseleave', startAutoScroll);
+            }
 
             setupVisualObserver(container);
         }
@@ -576,8 +756,11 @@
             typeLoop();
             
             setTimeout(() => {
-                initInfiniteCarousel('frontend-slider', frontendSkills);
-                initInfiniteCarousel('backend-slider', backendSkills);
+                // Only initialize carousels on desktop
+                if (window.innerWidth >= 768) {
+                    initInfiniteCarousel('frontend-slider', frontendSkills);
+                    initInfiniteCarousel('backend-slider', backendSkills);
+                }
                 initScrollReveal();
             }, 100);
         });
