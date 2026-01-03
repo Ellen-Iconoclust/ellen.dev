@@ -179,17 +179,35 @@
             transform: translateY(0);
         }
 
-        /* Mobile Skills Cards */
+        /* Mobile Skills Cards - UPDATED for full corner rounding */
         .mobile-skill-card {
             display: flex;
             align-items: center;
             padding: 10px 14px;
             background: white;
-            border-radius: 12px;
+            border-radius: 12px; /* Full corner rounding */
             border: 1px solid #e5e7eb;
             transition: all 0.3s ease;
             margin-bottom: 8px;
+            width: 100%;
+            min-width: 0; /* Allow shrinking */
+            flex-shrink: 0;
         }
+        
+        /* Tablet skill cards - UPDATED for horizontal layout */
+        @media (min-width: 640px) and (max-width: 767px) {
+            .mobile-skills-grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
+            }
+            .mobile-skill-card {
+                margin-bottom: 0;
+                height: 100%;
+                justify-content: flex-start;
+            }
+        }
+        
         .dark .mobile-skill-card {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
@@ -298,11 +316,87 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Mobile skills grid spacing */
-        .mobile-skills-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 8px;
+        /* Project Visit Button Styling */
+        .project-visit-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1e40af;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            z-index: 10;
+        }
+        
+        .dark .project-visit-btn {
+            background: rgba(30, 64, 175, 0.8);
+            color: white;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+        }
+        
+        .project-visit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            background: white;
+            color: #1e40af;
+        }
+        
+        .dark .project-visit-btn:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* Tech stack with visit icon styling */
+        .tech-stack-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+        
+        .tech-stack-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            flex: 1;
+        }
+        
+        .project-visit-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            color: #3b82f6;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 0.5rem;
+        }
+        
+        .dark .project-visit-icon {
+            background: rgba(96, 165, 250, 0.2);
+            color: #60a5fa;
+        }
+        
+        .project-visit-icon:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .dark .project-visit-icon:hover {
+            background: #60a5fa;
+            color: #1e40af;
         }
     </style>
 </head>
@@ -519,12 +613,17 @@
             </div>
         </section>
 
-        <section id="projects" class="reveal-section py-20 scroll-mt-20">
+                <section id="projects" class="reveal-section py-20 scroll-mt-20">
             <h2 class="text-4xl sm:text-5xl font-bold text-center mb-4">Featured Projects</h2>
             <p class="text-center text-gray-500 mb-12">Building solutions for real-world problems</p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Pho-equills Project -->
+                <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md relative">
+                    <a href="https://pho-equills.vercel.app" target="_blank" class="project-visit-btn">
+                        <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        Visit
+                    </a>
                     <div class="h-52 bg-gradient-to-br from-orange-400 to-pink-500 dark:project-card-header flex items-center justify-center">
                         <i data-lucide="feather" class="text-white w-20 h-20 drop-shadow-lg"></i>
                     </div>
@@ -533,15 +632,18 @@
                         <p class="text-gray-600 dark:text-gray-300 mb-6 flex-grow leading-relaxed">
                             A comprehensive website for my writing brand featuring a blog, portfolio, and e-commerce section for selling digital products and merchandise.
                         </p>
-                        <div class="flex flex-wrap gap-2 mt-auto">
-                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">HTML</span>
-                            <span class="px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-200 rounded-full text-xs font-bold uppercase tracking-wide">CSS</span>
-                            <span class="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-200 rounded-full text-xs font-bold uppercase tracking-wide">JS</span>
-                            <span class="px-3 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-200 rounded-full text-xs font-bold uppercase tracking-wide">Stripe</span>
+                        <div class="tech-stack-container">
+                            <div class="tech-stack-tags">
+                                <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">HTML</span>
+                                <span class="px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-200 rounded-full text-xs font-bold uppercase tracking-wide">CSS</span>
+                                <span class="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-200 rounded-full text-xs font-bold uppercase tracking-wide">JS</span>
+                                <span class="px-3 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-200 rounded-full text-xs font-bold uppercase tracking-wide">Stripe</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- CIVI-Connect Project -->
                 <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md">
                     <div class="h-52 bg-gradient-to-br from-blue-500 to-cyan-500 dark:project-card-header flex items-center justify-center">
                         <i data-lucide="landmark" class="text-white w-20 h-20 drop-shadow-lg"></i>
@@ -560,6 +662,7 @@
                     </div>
                 </div>
 
+                <!-- Uni-Verse Project -->
                 <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md">
                     <div class="h-52 bg-gradient-to-br from-purple-600 to-indigo-700 dark:project-card-header flex items-center justify-center">
                         <i data-lucide="graduation-cap" class="text-white w-20 h-20 drop-shadow-lg"></i>
@@ -577,7 +680,12 @@
                     </div>
                 </div>
 
-                <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md">
+                <!-- Code Ronins Project -->
+                <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md relative">
+                    <a href="https://code-ronins.vercel.app" target="_blank" class="project-visit-btn">
+                        <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        Visit
+                    </a>
                     <div class="h-52 bg-gradient-to-br from-gray-700 to-gray-900 dark:project-card-header flex items-center justify-center">
                         <i data-lucide="code-2" class="text-white w-20 h-20 drop-shadow-lg"></i>
                     </div>
@@ -586,10 +694,37 @@
                         <p class="text-gray-600 dark:text-gray-300 mb-6 flex-grow leading-relaxed">
                             A team portfolio website showcasing our collaborative projects, skills, and team members. Built with modern web technologies and responsive design.
                         </p>
-                        <div class="flex flex-wrap gap-2 mt-auto">
-                            <span class="px-3 py-1 bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-200 rounded-full text-xs font-bold uppercase tracking-wide">HTML5</span>
-                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">CSS3</span>
-                            <span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-200 rounded-full text-xs font-bold uppercase tracking-wide">JS</span>
+                        <div class="tech-stack-container">
+                            <div class="tech-stack-tags">
+                                <span class="px-3 py-1 bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-200 rounded-full text-xs font-bold uppercase tracking-wide">HTML5</span>
+                                <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">CSS3</span>
+                                <span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-200 rounded-full text-xs font-bold uppercase tracking-wide">JS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PromptBud Project - NEW -->
+                <div class="glow-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full shadow-md relative">
+                    <a href="https://promptbud.vercel.app" target="_blank" class="project-visit-btn">
+                        <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        Visit
+                    </a>
+                    <div class="h-52 bg-gradient-to-br from-[#FF7B65] to-[#FFd9c8] dark:project-card-header flex items-center justify-center">
+                        <i data-lucide="star" class="text-white w-20 h-20 drop-shadow-lg"></i>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">PromptBud</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6 flex-grow leading-relaxed">
+                            A revolutionary website where users can discover viral AI prompts, submit their own, and manage creative prompts within a community of prompt engineers and creative minds.
+                        </p>
+                        <div class="tech-stack-container">
+                            <div class="tech-stack-tags">
+                                <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200 rounded-full text-xs font-bold uppercase tracking-wide">HTML</span>
+                                <span class="px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-200 rounded-full text-xs font-bold uppercase tracking-wide">CSS</span>
+                                <span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-200 rounded-full text-xs font-bold uppercase tracking-wide">JS</span>
+                                <span class="px-3 py-1 bg-cyan-100 dark:bg-cyan-900/50 text-cyan-700 dark:text-cyan-200 rounded-full text-xs font-bold uppercase tracking-wide">Neon DB</span>
+                            </div>
                         </div>
                     </div>
                 </div>
